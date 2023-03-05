@@ -1,0 +1,2 @@
+# TIMsForEmbedded
+PowerBIEmbeddedのWrapperフレームであるTIMsをさらにiFrame埋め込み仕様にしたスリム版
