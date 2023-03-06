@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14">
+  <g id="menu_green" transform="translate(-216 -27)">
+    <g id="bar-chart-2" transform="translate(216 41) rotate(-90)">
+      <path id="線_1" data-name="線 1" d="M0,11a1,1,0,0,1-1-1V0A1,1,0,0,1,0-1,1,1,0,0,1,1,0V10A1,1,0,0,1,0,11Z" transform="translate(13 7)" fill="#fff"/>
+      <path id="線_2" data-name="線 2" d="M0,17a1,1,0,0,1-1-1V0A1,1,0,0,1,0-1,1,1,0,0,1,1,0V16A1,1,0,0,1,0,17Z" transform="translate(7 1)" fill="#fff"/>
+      <path id="線_3" data-name="線 3" d="M0,7A1,1,0,0,1-1,6V0A1,1,0,0,1,0-1,1,1,0,0,1,1,0V6A1,1,0,0,1,0,7Z" transform="translate(1 11)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
