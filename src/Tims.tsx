@@ -1,8 +1,6 @@
-import { Box, Paper, SvgIcon, Theme, Collapse } from '@mui/material'
+import { Box, Paper, Theme, Collapse } from '@mui/material'
 import { FC, useEffect, useState, useRef, useMemo } from 'react'
 import { MenuBar } from './components/Menu'
-import { Header } from './components/Header'
-import { Menu as MuiMenu, MenuItem } from '@mui/material'
 import { UserAgentApplication, AuthError, AuthResponse } from 'msal'
 import { clientId, scopes } from './authConfig'
 import { PowerBIEmbed } from 'powerbi-client-react'
@@ -10,12 +8,8 @@ import { models, Report, service, Embed } from 'powerbi-client'
 import 'powerbi-report-authoring'
 import {
   menus,
-  Detail,
   Under,
-  OVERALL_REPORT_NAME,
-  TOP_REPORT_NAME,
 } from './menuConfig'
-import { ReactComponent as arrowLeftIcon } from './assets/icons/arrow_left.svg'
 // DatePickerインポート
 import { YearPickerCalendar } from './components/YearPickerCalendar'
 import { MonthPickerCalendar } from './components/MonthPickerCalendar'
@@ -236,28 +230,6 @@ export const Tims: FC = () => {
   const accessToken = useRef<string | undefined>(
     undefined
     /*'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyIsImtpZCI6Ii1LSTNROW5OUjdiUm9meG1lWm9YcWJIWkdldyJ9.eyJhdWQiOiJodHRwczovL2FuYWx5c2lzLndpbmRvd3MubmV0L3Bvd2VyYmkvYXBpIiwiaXNzIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMzc1NmYxOTYtZDdkYi00NTFiLWIyYTktOWUxYTAxODU1ZmUxLyIsImlhdCI6MTY3MTAwODA2NiwibmJmIjoxNjcxMDA4MDY2LCJleHAiOjE2NzEwMTI2OTQsImFjY3QiOjAsImFjciI6IjEiLCJhaW8iOiJBVlFBcS84VEFBQUFwb3BZVVpwWmp5aWpjZjc4RDUrcGk3MjAvOUM3QXZxaHQraDFZVmJOMEVsL0k4N0N4bzdJeURtSlZXOEtMRmdXTDJ4VC9FUUdzdStwdEM0NzJBaGxxdUJxcDVpanJPUEdjUlU4dFFSMjB2MD0iLCJhbXIiOlsicHdkIiwibWZhIl0sImFwcGlkIjoiODcxYzAxMGYtNWU2MS00ZmIxLTgzYWMtOTg2MTBhN2U5MTEwIiwiYXBwaWRhY3IiOiIyIiwiZmFtaWx5X25hbWUiOiLmsrPph44iLCJnaXZlbl9uYW1lIjoi6Iux5oG1IiwiaXBhZGRyIjoiMjE3LjE3OC4xNTAuMTQ4IiwibmFtZSI6Iuays-mHjiDoi7HmgbUiLCJvaWQiOiIxOTEzNTRjMy1lZTBjLTRiZjQtYTAzNy1hZjZjMmFhNDlhMWYiLCJvbnByZW1fc2lkIjoiUy0xLTUtMjEtMzA0MzQ1OTY1Ny0zNDY4NDYyNDU4LTIwMjUyMDM2ODUtMTkzMjUiLCJwdWlkIjoiMTAwMzIwMDExREMzNUUwMyIsInJoIjoiMC5BVDBBbHZGV045dlhHMFd5cVo0YUFZVmY0UWtBQUFBQUFBQUF3QUFBQUFBQUFBQTlBSVEuIiwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIiwic2lnbmluX3N0YXRlIjpbImttc2kiXSwic3ViIjoiSmNub3VJYkZwT3dGZXJEUC1DcWtXRUdrXzh2bWJwNUloY19IZ1BkQjdzTSIsInRpZCI6IjM3NTZmMTk2LWQ3ZGItNDUxYi1iMmE5LTllMWEwMTg1NWZlMSIsInVuaXF1ZV9uYW1lIjoiaC1rYXdhbm9AaS1lbnRlci5jby5qcCIsInVwbiI6Imgta2F3YW5vQGktZW50ZXIuY28uanAiLCJ1dGkiOiJtbmdOZF8zR0FVNjQ3eGM3MnpNaUFBIiwidmVyIjoiMS4wIiwid2lkcyI6WyJiNzlmYmY0ZC0zZWY5LTQ2ODktODE0My03NmIxOTRlODU1MDkiXX0.Tf4egWMpWddDvQLRnLBJPJsAhtaVqZtAzd97_MY2DU6XqPq9FcyANCsSpdfIK4SmdFisrViUw8ItRH0MjRtS4mYziBbLbGDpF3MY7-3N7_A0Y2rSHSvus6DsDSA63p_YkY8aIWEfmcOVeVkLlyUZZuKcgYuOtTeyhtKq-X9yVxf0-epM7se1WcQd7Nea2Q9wf-dl4GXB-kgN4UnEW5_4azWPejJDqFoN48HtPgm04FOQ79zQPxdHuSiu1w2VeN4sHVEQKqrKQD2ukLJJvOhpaFd_6hcXDdHP6KfKitDd5GpMNb6eOVKxfHiiKhEX7LWI5397wBWxBiunSqlDAtPJnQ'*/
-  )
-  // 最下層メニューの開閉
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const open = Boolean(anchorEl)
-  const handleClick = (
-    event: React.MouseEvent<HTMLElement>,
-    mainTitle: string
-  ) => {
-    setAnchorEl(event.currentTarget)
-  }
-  // 最下層メニューの開閉
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
-
-  // 「工場全体」のPowerBIを表示しているか変数
-  const isMainPage = useMemo(
-    () =>
-      currentMenu.mainTitle === OVERALL_REPORT_NAME &&
-      currentMenu.subMenuTitle === TOP_REPORT_NAME &&
-      currentMenu.detailTitle === undefined,
-    [currentMenu]
   )
 
   // PowerBIを表示するのに設定の値
@@ -541,200 +513,6 @@ export const Tims: FC = () => {
     }
   }
 
-  // 「S」「Q」「C」などを選択時
-  const HandleChangeDetail = (detail: Detail) => {
-    // console.log('最下層が存在する場合')
-    if (detail.underMenu) {
-      setCurrentMenu({
-        ...currentMenu,
-        detailTitle: detail.title,
-        //最下層をセット
-        underMenu: detail.underMenu,
-      })
-    } else if (detail.anotherTabFlag) {
-      // console.log('最下層が存在しないが、別タブで開く場合')
-      window.open(detail.embedUrl, '_blank')
-      accessCountApi(detail.accessCountTitle, detail.title)
-    } else {
-      // console.log('最下層が存在しないかつ、別タブで開かない場合')
-      setCurrentMenu({
-        ...currentMenu,
-        detailTitle: detail.title,
-        detailAccessCountTitle: detail.accessCountTitle,
-        detailEmbedUrl: detail.embedUrl,
-        detailsDateSlicerType: detail.dateSlicerType,
-        underMenu: undefined,
-        underMenuTitle: undefined,
-        underMenuAccessCountTitle: undefined,
-        underMenuEmbedUrl: undefined,
-        underMenuDateSlicerType: undefined,
-      })
-      accessCountApi(detail.accessCountTitle, detail.title)
-    }
-  }
-
-  // 最下層メニューを取得
-  const HandleChangeUnder = (under: Under) => {
-    setCurrentMenu({
-      ...currentMenu,
-      //最下層の値をセット
-      underMenuTitle: under.title,
-      underMenuAccessCountTitle: under.accessCountTitle,
-      underMenuEmbedUrl: under.embedUrl,
-      underMenuDateSlicerType: under.dateSlicerType,
-    })
-    accessCountApi(under.accessCountTitle, under.title)
-  }
-
-  // バックボタン押下時
-  const handleBack = () => {
-    // 最下層メニューのPowerBIを表示している間にバックボタンを押下
-    if (
-      currentMenu.underMenuTitle !== undefined &&
-      currentMenu.underMenuEmbedUrl !== undefined
-    ) {
-      // detailのPowerBIの情報を削除する（underとdetailの情報を削除し、subMenuのPowerBiを表示）
-      setCurrentMenu({
-        ...currentMenu,
-        detailTitle: undefined,
-        detailAccessCountTitle: undefined,
-        detailEmbedUrl: undefined,
-        detailsDateSlicerType: undefined, //detail日付スライサー種別削除
-        underMenu: undefined,
-        underMenuTitle: undefined,
-        underMenuAccessCountTitle: undefined,
-        underMenuEmbedUrl: undefined,
-        underMenuDateSlicerType: undefined,
-      })
-      accessCountApi(
-        currentMenu.subMenuAccessCountTitle,
-        currentMenu.subMenuTitle
-      )
-      return
-    }
-
-    // detailのPowerBIを表示している間、バックボタンを押下
-    if (
-      currentMenu.detailTitle !== undefined &&
-      currentMenu.detailEmbedUrl !== undefined
-    ) {
-      // detailのPowerBIの情報を削除する（detailの情報がないと勝手に、subMenuのPowerBiを表示）
-      setCurrentMenu({
-        ...currentMenu,
-        detailTitle: undefined,
-        detailAccessCountTitle: undefined,
-        detailEmbedUrl: undefined,
-        detailsDateSlicerType: undefined, //detail日付スライサー種別削除
-      })
-      accessCountApi(
-        currentMenu.subMenuAccessCountTitle,
-        currentMenu.subMenuTitle
-      )
-      return
-    }
-
-    // subMenu(トップの場合)のPowerBIを表示している間に、バックボタンを押下
-    if (
-      currentMenu.mainTitle !== OVERALL_REPORT_NAME &&
-      currentMenu.subMenuTitle === TOP_REPORT_NAME
-    ) {
-      console.log('subMenu(トップの場合)のPowerBIを表示している間に、バックボタンを押下')
-      //　工場全体に画面遷移するため、工場全体のPowerBIの情報を検索
-      const overallReport = menus
-        .find((menu) => menu.title === OVERALL_REPORT_NAME)
-        ?.subMenu.find((subMenu) => subMenu.title === TOP_REPORT_NAME)
-      setCurrentMenu({
-        mainTitle: OVERALL_REPORT_NAME,
-        mainAccessCountTitle: menus[0].accessCountTitle,
-        subMenuTitle: overallReport?.title,
-        subMenuAccessCountTitle: menus[0].subMenu[0].accessCountTitle,
-        subMenuEmbedUrl: overallReport?.embedUrl,
-        subMenuDateSlicerType: overallReport?.dateSlicerType,
-        detailTitle: undefined,
-        detailAccessCountTitle: undefined,
-        detailEmbedUrl: undefined,
-        detailsDateSlicerType: undefined,
-        underMenu: undefined,
-        underMenuTitle: undefined,
-        underMenuAccessCountTitle: undefined,
-        underMenuEmbedUrl: undefined,
-        underMenuDateSlicerType: undefined,
-        noMenuFlag: overallReport?.noMenuFlag
-          ? overallReport?.noMenuFlag
-          : false,
-      })
-      accessCountApi(menus[0].subMenu[0].accessCountTitle, overallReport?.title)
-      return
-    }
-
-    // 検査課などをスキップ
-    if (
-      currentMenu.mainTitle !== OVERALL_REPORT_NAME &&
-      !currentMenu.noMenuFlag
-    ) {
-      //　工場全体に画面遷移するため、工場全体のPowerBIの情報を検索
-      console.log('検査課などをスキップ')
-      const overallReport = menus
-        .find((menu) => menu.title === OVERALL_REPORT_NAME)
-      ?.subMenu.find((subMenu) => subMenu.title === TOP_REPORT_NAME)
-      setCurrentMenu({
-        mainTitle: OVERALL_REPORT_NAME,
-        mainAccessCountTitle: menus[0].accessCountTitle,
-        subMenuTitle: overallReport?.title,
-        subMenuAccessCountTitle: menus[0].subMenu[0].accessCountTitle,
-        subMenuEmbedUrl: overallReport?.embedUrl,
-        subMenuDateSlicerType: overallReport?.dateSlicerType,
-        detailTitle: undefined,
-        detailAccessCountTitle: undefined,
-        detailEmbedUrl: undefined,
-        detailsDateSlicerType: undefined,
-        underMenu: undefined,
-        underMenuTitle: undefined,
-        underMenuAccessCountTitle: undefined,
-        underMenuEmbedUrl: undefined,
-        underMenuDateSlicerType: undefined,
-        noMenuFlag: overallReport?.noMenuFlag
-          ? overallReport?.noMenuFlag
-          : false,
-      })
-      accessCountApi(menus[0].subMenu[0].accessCountTitle, overallReport?.title)
-      return
-    }
-
-    // subMenu(トップ以外)のPowerBIを表示している間に、バックボタンを押下
-    if (
-      // ホームがnoMenuFalseになったためこの条件が不要。noMenuTrueの場合は活かす必要がありそう
-      // currentMenu.mainTitle !== OVERALL_REPORT_NAME &&
-      currentMenu.subMenuTitle !== TOP_REPORT_NAME
-    ) {
-      //　課のトップに画面遷移するため、課のトップのPowerBIの情報を検索
-      //console.log('subMenu(トップ以外)のPowerBIを表示している間に、バックボタンを押下')
-      const topReport = menus
-        .find((menu) => menu.title === currentMenu.mainTitle)
-        ?.subMenu.find((subMenu) => subMenu.title === TOP_REPORT_NAME)
-      setCurrentMenu({
-        mainTitle: currentMenu.mainTitle,
-        mainAccessCountTitle: currentMenu.mainAccessCountTitle,
-        subMenuTitle: topReport?.title,
-        subMenuAccessCountTitle: topReport?.accessCountTitle,
-        subMenuEmbedUrl: topReport?.embedUrl,
-        subMenuDateSlicerType: topReport?.dateSlicerType,
-        detailTitle: undefined,
-        detailAccessCountTitle: undefined,
-        detailEmbedUrl: undefined,
-        detailsDateSlicerType: undefined,
-        underMenu: undefined,
-        underMenuTitle: undefined,
-        underMenuAccessCountTitle: undefined,
-        underMenuEmbedUrl: undefined,
-        underMenuDateSlicerType: undefined,
-        noMenuFlag: topReport?.noMenuFlag ? topReport?.noMenuFlag : false,
-      })
-      accessCountApi(topReport?.accessCountTitle, topReport?.title)
-      return
-    }
-  }
-
   // Datepicker再選択時レンダリング
   useEffect(() => {
     selectedDatePost(FILTER_DELAY_MSEC_OF_MOD)
@@ -904,20 +682,11 @@ export const Tims: FC = () => {
     }
   }
 
+  // TODO : 必要ない可能性が高い
   // DataPicker切替
   const menuFilterType = useMemo(() => {
     // currentMenuが更新されるとこの処理が走って、menuFilterTypeにreturnが返される
-    //最下層選択時
-    if (currentMenu.underMenuDateSlicerType !== undefined) {
-      // menuFilterTypeにcurrentMenu.underMenuDateSlicerTypeを入れる
-      return currentMenu.underMenuDateSlicerType
-    }
-    //「S」「Q」「C」などを選択時
-    else if (currentMenu.detailsDateSlicerType !== undefined) {
-      return currentMenu.detailsDateSlicerType
-    }
-    //サブメニュー選択時
-    else if (currentMenu.subMenuDateSlicerType !== undefined) {
+    if (currentMenu.subMenuDateSlicerType !== undefined) {
       return currentMenu.subMenuDateSlicerType
     } else {
       // どれでもなかったらundefined
@@ -943,33 +712,7 @@ export const Tims: FC = () => {
         />
       </Collapse>
       <Box sx={styles.contentContainer} width="100%">
-        <Header
-          setIsOpenMenu={setIsOpenMenu}
-          isOpenMenu={isOpenMenu}
-          currentMenu={currentMenu}
-          setCurrentMenu={setCurrentMenu}
-        />
         <Box display="flex" sx={styles.btnList} width="100%">
-          <Box style={styles.topBtn}>
-            {!isMainPage && (
-              <Box
-                sx={styles.backBtn}
-                mr={4}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                onClick={handleBack}
-              >
-                <SvgIcon
-                  component={arrowLeftIcon}
-                  sx={{ width: 'auto', height: 'auto' }}
-                  width="18"
-                  height="15.43"
-                  viewBox="0 0 18 15.428"
-                />
-              </Box>
-            )}
-          </Box>
           <Box py={4} sx={styles.btnMenu} width="100%">
             <Box
               display="flex"
@@ -1005,66 +748,7 @@ export const Tims: FC = () => {
               alignItems="center"
             >
               <Box display="flex" sx={styles.bookmarksContainer}>
-                {menus
-                  .find((menu) => menu.title === currentMenu.mainTitle)
-                  ?.subMenu.find(
-                    (subMenu) => subMenu.title === currentMenu.subMenuTitle
-                  )
-                  ?.details.map((detial) => {
-                    return (
-                      <Box
-                        sx={{
-                          ...styles.btn,
-                          ...(currentMenu.detailTitle === detial.title
-                            ? styles.clickedBtn
-                            : {}),
-                          minWidth: 44,
-                        }}
-                        key={detial.title}
-                        onClick={(e) => {
-                          HandleChangeDetail(detial)
-                          if (detial.underMenu) {
-                            handleClick(e, detial.title)
-                          }
-                        }}
-                      >
-                        {detial.title}
-                      </Box>
-                    )
-                  })}
-                <MuiMenu
-                  anchorEl={anchorEl}
-                  id="sub-menu"
-                  open={open}
-                  onClose={handleClose}
-                  onClick={handleClose}
-                  sx={styles.subMenu}
-                  PaperProps={{
-                    elevation: 0,
-                    sx: styles.subMenuPaper,
-                  }}
-                  transformOrigin={{ horizontal: 'left', vertical: 'top' }}
-                  anchorOrigin={{ horizontal: 0, vertical: 70 }}
-                >
-                  {menus
-                    .find((menu) => menu.title === currentMenu.mainTitle)
-                    ?.subMenu.find(
-                      (subMenu) => subMenu.title === currentMenu.subMenuTitle
-                    )
-                    ?.details.find(
-                      (detial) => detial.title === currentMenu.detailTitle
-                    )
-                    ?.underMenu?.map((under) => (
-                      <MenuItem
-                        key={under.title}
-                        onClick={(e) => HandleChangeUnder(under)}
-                      >
-                        {under.title}
-                      </MenuItem>
-                    ))}
-                </MuiMenu>
               </Box>
-
               {/* DataPicker */}
               <Box mr="60px">
                 {menuFilterType === 'year' && (
