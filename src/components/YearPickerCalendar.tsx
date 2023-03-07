@@ -15,10 +15,10 @@ const styles = {
     '& .MuiOutlinedInput-root': {
       cursor: 'pointer',
       borderRadius: '100vh',
-      height: '36px',
+      height: '24px',
       borderColor: (theme: Theme) => theme.colors.white,
       backgroundColor: (theme: Theme) => theme.colors.white,
-      padding: '8px 16px 5px 16px',
+      padding: '4px 16px 2px 4px',
       '& fieldset': {
         border: 'none',  // 通常時のボーダー色(アウトライン)
       },

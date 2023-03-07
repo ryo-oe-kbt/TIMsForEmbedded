@@ -1,6 +1,5 @@
-import { Box, Paper, Theme, Collapse } from '@mui/material'
+import { Box, Paper, Theme } from '@mui/material'
 import { FC, useEffect, useState, useRef, useMemo } from 'react'
-import { MenuBar } from './components/Menu'
 import { UserAgentApplication, AuthError, AuthResponse } from 'msal'
 import { clientId, scopes } from './authConfig'
 import { PowerBIEmbed } from 'powerbi-client-react'
@@ -8,7 +7,6 @@ import { models, Report, service, Embed } from 'powerbi-client'
 import 'powerbi-report-authoring'
 import {
   menus,
-  Under,
 } from './menuConfig'
 // DatePickerインポート
 import { YearPickerCalendar } from './components/YearPickerCalendar'
@@ -18,11 +16,11 @@ import { DayPickerCalendar } from './components/DayPickerCalendar'
 import { format, startOfWeek, endOfWeek, addDays, subDays } from 'date-fns'
 // アクセスカウンター
 import { accessCountApi } from './components/api/AccessCountApi'
+import { useLocation } from 'react-router-dom';
 
 // フィルターAPI送信ディレイ
 const FILTER_DELAY_MSEC_OF_INIT = 2000;
 const FILTER_DELAY_MSEC_OF_MOD = 250;
-
 
 const styles = {
   root: {
@@ -34,29 +32,24 @@ const styles = {
     boxShadow: '0px 3px 6px #2C28281C',
   },
   contentContainer: {
-    height: 'calc(100vh - 13px)',
+    height: '100vh',
     windth: '100vw',
     overflow: 'hidden',
     flexGrow: '1',
     display: 'flex',
     flexDirection: 'column',
     color: (theme: Theme) => theme.colors.white,
-    background: (theme: Theme) =>
-      `linear-gradient(180deg, ${theme.colors.mainGreen} 137px, transparent 0%)`,
   },
   btnList: {
     position: 'relative',
-    height: '70px',
-  },
-  topBtn: {
-    padding: '13px 0',
-    marginLeft: '30px',
+    height: '30px',
+    background: (theme: Theme) => theme.colors.mainGreen,
   },
   btnMenu: {
     display: 'flex',
     position: 'absolute',
     left: '90px',
-    padding: '13px 0',
+    padding: '2px 0',
     width:'calc( 100% - 56px)',
   },
   powerbiContainer: {
@@ -66,23 +59,8 @@ const styles = {
     padding: '0',
     boxShadow: 'none',
   },
-  backBtn: {
-    height: 44,
-    width: 44,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    border: (theme: Theme) => `1px solid ${theme.colors.line}`,
-    borderRadius: 2,
-    boxShadow: '0px 3px 6px #1717172d',
-    '&:hover': {
-      color: (theme: Theme) => theme.colors.mainGreen,
-      backgroundColor: (theme: Theme) => theme.colors.white,
-    },
-  },
   btn: {
-    height: 44,
+    height: 24,
     minWidth: 80,
     display: 'flex',
     justifyContent: 'center',
@@ -114,7 +92,7 @@ const styles = {
   },
   bookmarksContainer: {
     position: 'relative',
-    boxShadow: '0px 3px 6px #1717172d',
+    boxShadow: '0px 3px 2px #1717172d',
     borderRadius: '8px',
   },
   subMenu: {
@@ -155,16 +133,6 @@ export type CurrentMenu = {
   subMenuAccessCountTitle?: string | undefined
   subMenuEmbedUrl: string | undefined
   subMenuDateSlicerType?: string | undefined
-  detailTitle: string | undefined
-  detailAccessCountTitle?: string | undefined
-  detailEmbedUrl: string | undefined
-  detailsDateSlicerType?: string | undefined
-  underMenu: Under[] | undefined
-  underMenuTitle: string | undefined
-  underMenuAccessCountTitle?: string | undefined
-  underMenuEmbedUrl: string | undefined
-  underMenuDateSlicerType?: string | undefined
-  noMenuFlag: boolean | undefined
 }
 
 // POST先テーブル/カラム名
@@ -174,9 +142,29 @@ export const MONTH_STRING = 'MONTH_STRING' //カラム名(対象：'月')
 export const START_OF_WEEK = 'START_OF_WEEK' //カラム名(対象：'週')
 export const DATE_STRING = 'DATE_STRING' //カラム名(対象：'日')
 
+const NameQuery: React.FC = () => {
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const pbiUrl = (query.get('pbiUrl')) as string | undefined;
+  const dateSlicerType = (query.get('dateSlicerType')) as string | undefined;
+
+  return (
+    <div>
+      <p>{pbiUrl}</p>
+      <p>{dateSlicerType}</p>
+    </div>
+  );
+}
+
+
 export const Tims: FC = () => {
   // システム日付
   const today = new Date()
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const pbiUrl = (query.get('pbiUrl')) as string | undefined;
+  const dateSlicerType = (query.get('dateSlicerType')) as string | undefined;
+
   // 現在表示しているPowerBIの情報
   // 初期で工場全体の情報を設定する
   const [currentMenu, setCurrentMenu] = useState<CurrentMenu>({
@@ -192,21 +180,16 @@ export const Tims: FC = () => {
     subMenuAccessCountTitle: menus[0].subMenu[0].accessCountTitle
       ? menus[0].subMenu[0].accessCountTitle
       : menus[0].subMenu[0].title,
-    subMenuEmbedUrl: menus[0].subMenu[0].embedUrl,
-    subMenuDateSlicerType: menus[0].subMenu[0].dateSlicerType,
-    // 「S」「Q」「Mc」などのヘッダーのメニュー
-    //　初期でなのも設定しない
-    detailTitle: undefined,
-    detailAccessCountTitle: undefined,
-    detailEmbedUrl: undefined,
-    underMenu: undefined,
-    underMenuTitle: undefined,
-    underMenuAccessCountTitle: undefined,
-    underMenuEmbedUrl: undefined,
-    detailsDateSlicerType: undefined,
-    underMenuDateSlicerType: undefined,
-    // 課の下層メニューがあるかないか
-    noMenuFlag: menus[0].noMenuFlag ? menus[0].noMenuFlag : false,
+    /*
+        subMenuEmbedUrl: menus[0].subMenu[0].embedUrl,
+        subMenuDateSlicerType: menus[0].subMenu[0].dateSlicerType
+          */
+    subMenuEmbedUrl: pbiUrl
+      ? pbiUrl
+      : menus[0].subMenu[0].embedUrl,
+    subMenuDateSlicerType: dateSlicerType
+      ? dateSlicerType
+      : menus[0].subMenu[0].dateSlicerType
   })
   // ブックマークのリスト
   const [bookmarks, setBookmarks] = useState<
@@ -220,8 +203,6 @@ export const Tims: FC = () => {
   const [currentBookmark, setCurrentBookmark] = useState<
     models.IReportBookmark | undefined
   >(undefined)
-  // サイドメニューが展開しているかステート
-  const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false)
   // レポートDOMのrefを保管するref
   const reportRef = useRef<Report | undefined>(undefined)
   // トークン
@@ -318,9 +299,6 @@ export const Tims: FC = () => {
         )
         if (subMenu === undefined) return
         //　もっと細かくメニューを検索(SやQやMcなど)
-        const detail = subMenu.details.find(
-          (subMenu: any) => subMenu.title === destinationTitleExplode[2]
-        )
 
         // 表示させるPowerBI情報を設定する
         setCurrentMenu({
@@ -330,24 +308,9 @@ export const Tims: FC = () => {
           subMenuAccessCountTitle: subMenu.accessCountTitle,
           subMenuEmbedUrl: subMenu.embedUrl,
           subMenuDateSlicerType: subMenu.dateSlicerType,
-          detailTitle: detail ? detail.title : undefined,
-          detailAccessCountTitle: detail ? detail.accessCountTitle : undefined,
-          detailEmbedUrl: detail ? detail.embedUrl : undefined,
-          detailsDateSlicerType: detail ? detail.dateSlicerType : undefined,
-          underMenu: undefined,
-          underMenuTitle: undefined,
-          underMenuAccessCountTitle: undefined,
-          underMenuEmbedUrl: undefined,
-          underMenuDateSlicerType: undefined,
-          noMenuFlag: subMenu.noMenuFlag ? subMenu.noMenuFlag : false,
         })
 
         if (
-          destinationTitleExplode[2] !== '' ||
-          destinationTitleExplode[2] !== undefined
-        ) {
-          accessCountApi(detail?.accessCountTitle, detail?.title)
-        } else if (
           destinationTitleExplode[1] !== '' ||
           destinationTitleExplode[1] !== undefined
         ) {
@@ -481,14 +444,7 @@ export const Tims: FC = () => {
     //　切り替える先のPowerBIを判断
     //　currentMenuにdetailメニューの情報がある場合にdetail(S,Q,Mcなど)のPowerBIを表示するわけ
     //　currentMenuにdetailメニューの情報がない場合にsuvMenuのPowerBIを表示するわけ
-    let embedUrl = undefined
-    if (currentMenu.underMenuEmbedUrl) {
-      embedUrl = currentMenu.underMenuEmbedUrl
-    } else if (currentMenu.detailEmbedUrl) {
-      embedUrl = currentMenu.detailEmbedUrl
-    } else {
-      embedUrl = currentMenu.subMenuEmbedUrl
-    }
+    let embedUrl = currentMenu.subMenuEmbedUrl
 
     //　レポートの設定を設定する
     setReportConfig({
@@ -697,20 +653,6 @@ export const Tims: FC = () => {
 
   return (
     <Box sx={styles.root} display="flex">
-      <Collapse
-        in={isOpenMenu}
-        orientation="horizontal"
-        sx={styles.collapseRoot}
-      >
-        <MenuBar
-          setIsOpenMenu={setIsOpenMenu}
-          isOpenMenu={isOpenMenu}
-          currentMenu={currentMenu}
-          setCurrentMenu={setCurrentMenu}
-          reportConfig={reportConfig}
-          setReportConfig={setReportConfig}
-        />
-      </Collapse>
       <Box sx={styles.contentContainer} width="100%">
         <Box display="flex" sx={styles.btnList} width="100%">
           <Box py={4} sx={styles.btnMenu} width="100%">
